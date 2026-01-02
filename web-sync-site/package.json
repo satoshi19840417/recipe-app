@@ -1,0 +1,6 @@
+{
+  "name": "recipe-timer-web-sync",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static HTML site for recipe sharing"
+}
