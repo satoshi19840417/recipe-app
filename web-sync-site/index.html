@@ -18,6 +18,7 @@
             --border: rgba(0, 0, 0, 0.1);
             --shadow: rgba(0, 0, 0, 0.1);
             --danger: #FF3B30;
+            --success: #34C759;
         }
 
         @media (prefers-color-scheme: dark) {
@@ -79,6 +80,16 @@
             background: none;
             border: none;
             cursor: pointer;
+        }
+
+        .header-icon-btn {
+            padding: 8px;
+            font-size: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            min-width: 48px;
+            text-align: center;
         }
 
         /* Content */
@@ -266,6 +277,11 @@
             margin-top: 8px;
         }
 
+        .action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .btn-primary {
             background-color: var(--tint);
             color: white;
@@ -275,6 +291,156 @@
             background-color: var(--background);
             color: var(--text);
             border: 1px solid var(--border);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 20px;
+            background: var(--card);
+            border-radius: 12px;
+            padding: 4px;
+            border: 1px solid var(--border);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px 8px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            background: transparent;
+            color: var(--secondary);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            background: var(--tint);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* AI Import */
+        .ai-upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 32px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--card);
+        }
+
+        .ai-upload-area:hover {
+            border-color: var(--tint);
+            background: rgba(255, 107, 53, 0.05);
+        }
+
+        .ai-upload-area.dragover {
+            border-color: var(--tint);
+            background: rgba(255, 107, 53, 0.1);
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-top: 16px;
+        }
+
+        /* Loading */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .loading-overlay.hidden {
+            display: none;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top-color: var(--tint);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            color: white;
+            margin-top: 16px;
+            font-size: 16px;
+        }
+
+        /* Settings */
+        .setting-item {
+            background: var(--card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .setting-label {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .setting-description {
+            font-size: 13px;
+            color: var(--secondary);
+            margin-top: 8px;
+        }
+
+        .api-key-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-dot.success {
+            background: var(--success);
+        }
+
+        .status-dot.error {
+            background: var(--danger);
         }
 
         /* Utilities */
@@ -306,7 +472,7 @@
         <header class="header">
             <button id="back-btn" class="header-btn hidden">＜ 戻る</button>
             <h1 id="header-title" class="header-title">レシピタイマー</h1>
-            <div style="width: 48px"></div> <!-- Spacer -->
+            <button id="settings-btn" class="header-icon-btn">⚙️</button>
         </header>
 
         <!-- View: Recipe List (Home) -->
@@ -330,30 +496,90 @@
 
         <!-- View: Recipe Create/Edit Form -->
         <div id="view-form" class="view">
-            <div class="form-group">
-                <label class="form-label">レシピ名</label>
-                <input type="text" id="form-name" class="form-input" placeholder="例: カレーライス">
+            <!-- Tabs for input method -->
+            <div class="tabs">
+                <button class="tab active" data-tab="manual">✏️ 手入力</button>
+                <button class="tab" data-tab="image">📷 画像から</button>
+                <button class="tab" data-tab="url">🔗 URLから</button>
             </div>
 
-            <div class="section-header">
-                <label class="form-label" style="margin:0">材料</label>
-                <button type="button" class="add-btn" onclick="addIngredientInput()">+ 追加</button>
-            </div>
-            <div id="form-ingredients">
-                <!-- Ingredient inputs -->
+            <!-- Tab: Manual Input -->
+            <div id="tab-manual" class="tab-content active">
+                <div class="form-group">
+                    <label class="form-label">レシピ名</label>
+                    <input type="text" id="form-name" class="form-input" placeholder="例: カレーライス">
+                </div>
+
+                <div class="section-header">
+                    <label class="form-label" style="margin:0">材料</label>
+                    <button type="button" class="add-btn" onclick="addIngredientInput()">+ 追加</button>
+                </div>
+                <div id="form-ingredients">
+                    <!-- Ingredient inputs -->
+                </div>
+
+                <div class="section-header">
+                    <label class="form-label" style="margin:0">作り方・工程</label>
+                    <button type="button" class="add-btn" onclick="addStepInput()">+ 追加</button>
+                </div>
+                <div id="form-steps">
+                    <!-- Step inputs -->
+                </div>
+
+                <div class="mt-4 flex gap-2">
+                    <button id="form-cancel" class="action-btn btn-secondary">キャンセル</button>
+                    <button id="form-save" class="action-btn btn-primary">保存する</button>
+                </div>
             </div>
 
-            <div class="section-header">
-                <label class="form-label" style="margin:0">作り方・工程</label>
-                <button type="button" class="add-btn" onclick="addStepInput()">+ 追加</button>
-            </div>
-            <div id="form-steps">
-                <!-- Step inputs -->
+            <!-- Tab: Image Import -->
+            <div id="tab-image" class="tab-content">
+                <div class="ai-upload-area" id="image-upload-area">
+                    <div style="font-size: 48px; margin-bottom: 12px">📷</div>
+                    <p style="font-weight: 600; margin-bottom: 8px">画像をアップロード</p>
+                    <p style="font-size: 14px; color: var(--secondary)">クリックして選択、またはドラッグ＆ドロップ</p>
+                    <input type="file" id="image-file-input" accept="image/*" style="display: none">
+                </div>
+                <img id="image-preview" class="preview-image hidden" alt="プレビュー">
+
+                <div class="mt-4" style="text-align: center">
+                    <p style="font-size: 13px; color: var(--secondary); margin-bottom: 8px">または</p>
+                    <label class="action-btn btn-secondary"
+                        style="display: inline-block; width: auto; padding: 12px 24px;">
+                        📸 カメラで撮影
+                        <input type="file" id="camera-input" accept="image/*" capture="environment"
+                            style="display: none">
+                    </label>
+                </div>
+
+                <div class="mt-4">
+                    <button id="analyze-image-btn" class="action-btn btn-primary" disabled>
+                        🔍 AIで解析する
+                    </button>
+                </div>
+                <p id="image-api-warning" class="setting-description hidden"
+                    style="color: var(--danger); text-align: center;">
+                    ⚠️ APIキーが設定されていません。設定画面でAPIキーを入力してください。
+                </p>
             </div>
 
-            <div class="mt-4 flex gap-2">
-                <button id="form-cancel" class="action-btn btn-secondary">キャンセル</button>
-                <button id="form-save" class="action-btn btn-primary">保存する</button>
+            <!-- Tab: URL Import -->
+            <div id="tab-url" class="tab-content">
+                <div class="form-group">
+                    <label class="form-label">レシピURL</label>
+                    <input type="url" id="url-input" class="form-input" placeholder="https://example.com/recipe/...">
+                    <p class="setting-description">クックパッド、楽天レシピなどのURLを入力すると、AIがレシピを推測します。</p>
+                </div>
+
+                <div class="mt-4">
+                    <button id="analyze-url-btn" class="action-btn btn-primary" disabled>
+                        🔍 URLから取り込む
+                    </button>
+                </div>
+                <p id="url-api-warning" class="setting-description hidden"
+                    style="color: var(--danger); text-align: center;">
+                    ⚠️ APIキーが設定されていません。設定画面でAPIキーを入力してください。
+                </p>
             </div>
         </div>
 
@@ -388,12 +614,49 @@
                     style="display:flex; justify-content:center; align-items:center;">アプリで開く</a>
             </div>
         </div>
+
+        <!-- View: Settings -->
+        <div id="view-settings" class="view">
+            <div class="setting-item">
+                <label class="setting-label">Gemini API キー</label>
+                <input type="password" id="api-key-input" class="form-input" placeholder="AIzaSy...">
+                <div id="api-key-status" class="api-key-status hidden">
+                    <span class="status-dot success"></span>
+                    <span>APIキーが設定されています</span>
+                </div>
+                <p class="setting-description">
+                    Google AI StudioでAPIキーを取得できます。<br>
+                    <a href="https://aistudio.google.com/apikey" target="_blank" style="color: var(--tint)">
+                        👉 APIキーを取得する
+                    </a>
+                </p>
+            </div>
+
+            <div class="flex gap-2">
+                <button id="save-api-key-btn" class="action-btn btn-primary">保存</button>
+                <button id="clear-api-key-btn" class="action-btn btn-secondary">クリア</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="spinner"></div>
+        <p id="loading-text" class="loading-text">解析中...</p>
     </div>
 
     <script>
-        // --- State & Utils ---
+        // --- Constants ---
         const LS_KEY = 'recipeTimer_recipes';
+        const LS_API_KEY = 'recipeTimer_geminiApiKey';
+        const GEMINI_API_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
 
+        // --- State ---
+        let editingId = null;
+        let selectedImageBase64 = null;
+        let selectedImageMimeType = null;
+
+        // --- Utils ---
         function getStoredRecipes() {
             try {
                 return JSON.parse(localStorage.getItem(LS_KEY) || '[]');
@@ -406,6 +669,18 @@
             localStorage.setItem(LS_KEY, JSON.stringify(recipes));
         }
 
+        function getApiKey() {
+            return localStorage.getItem(LS_API_KEY) || '';
+        }
+
+        function saveApiKey(key) {
+            localStorage.setItem(LS_API_KEY, key);
+        }
+
+        function clearApiKey() {
+            localStorage.removeItem(LS_API_KEY);
+        }
+
         function generateId() {
             return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
         }
@@ -416,20 +691,171 @@
             return div.innerHTML;
         }
 
+        function showLoading(text = '解析中...') {
+            document.getElementById('loading-text').textContent = text;
+            document.getElementById('loading-overlay').classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            document.getElementById('loading-overlay').classList.add('hidden');
+        }
+
+        // --- Gemini API Client ---
+        async function callGemini(prompt) {
+            const apiKey = getApiKey();
+            if (!apiKey) {
+                throw new Error('APIキーが設定されていません');
+            }
+
+            const response = await fetch(`${GEMINI_API_ENDPOINT}?key=${apiKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }],
+                    generationConfig: {
+                        temperature: 0.4,
+                        topK: 32,
+                        topP: 1,
+                        maxOutputTokens: 4096,
+                    },
+                }),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`API Error: ${response.status} - ${errorText}`);
+            }
+
+            const data = await response.json();
+            if (data.error) {
+                throw new Error(`API Error: ${data.error.message}`);
+            }
+
+            const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (!text) {
+                throw new Error('No response from API');
+            }
+            return text;
+        }
+
+        async function callGeminiWithImage(prompt, imageBase64, mimeType) {
+            const apiKey = getApiKey();
+            if (!apiKey) {
+                throw new Error('APIキーが設定されていません');
+            }
+
+            const response = await fetch(`${GEMINI_API_ENDPOINT}?key=${apiKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [
+                            { text: prompt },
+                            { inlineData: { mimeType, data: imageBase64 } }
+                        ]
+                    }],
+                    generationConfig: {
+                        temperature: 0.4,
+                        topK: 32,
+                        topP: 1,
+                        maxOutputTokens: 4096,
+                    },
+                }),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`API Error: ${response.status} - ${errorText}`);
+            }
+
+            const data = await response.json();
+            if (data.error) {
+                throw new Error(`API Error: ${data.error.message}`);
+            }
+
+            const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (!text) {
+                throw new Error('No response from API');
+            }
+            return text;
+        }
+
+        function parseJsonFromResponse(response) {
+            let jsonStr = response.trim();
+            if (jsonStr.startsWith('```json')) {
+                jsonStr = jsonStr.slice(7);
+            } else if (jsonStr.startsWith('```')) {
+                jsonStr = jsonStr.slice(3);
+            }
+            if (jsonStr.endsWith('```')) {
+                jsonStr = jsonStr.slice(0, -3);
+            }
+            return JSON.parse(jsonStr.trim());
+        }
+
+        // --- Prompts ---
+        const IMAGE_ANALYSIS_PROMPT = `
+この画像からレシピ情報を抽出してください。
+画像がレシピに関連しない場合は、画像に写っている料理を推測してレシピを生成してください。
+
+以下のJSON形式で回答してください：
+{
+  "name": "料理名",
+  "ingredients": [
+    { "name": "材料名", "amount": "分量" }
+  ],
+  "steps": [
+    { "description": "調理手順の説明", "duration": 秒数（オプション、調理時間がある場合のみ） }
+  ]
+}
+
+注意事項：
+- 日本語で回答してください
+- 材料は全て含めてください
+- 調理時間（duration）は秒単位で、電子レンジや加熱時間がある工程にのみ含めてください
+`;
+
+        const URL_EXTRACTION_PROMPT = `
+以下のURLからレシピ情報を推測して生成してください。
+URLに含まれるキーワードや一般的なレシピサイトの構造を参考にしてください。
+
+URL: {url}
+
+以下のJSON形式で回答してください：
+{
+  "name": "料理名",
+  "ingredients": [
+    { "name": "材料名", "amount": "分量" }
+  ],
+  "steps": [
+    { "description": "調理手順の説明", "duration": 秒数（オプション、調理時間がある場合のみ） }
+  ]
+}
+
+注意事項：
+- 日本語で回答してください
+- URLから料理名を推測し、一般的なレシピを生成してください
+- 材料は5〜10個程度含めてください
+- 調理時間（duration）は秒単位で、加熱時間がある工程にのみ含めてください
+`;
+
         // --- Router ---
         function navigate() {
             const hash = window.location.hash;
             const headerTitle = document.getElementById('header-title');
             const backBtn = document.getElementById('back-btn');
+            const settingsBtn = document.getElementById('settings-btn');
 
             // Components
             const viewList = document.getElementById('view-list');
             const viewForm = document.getElementById('view-form');
             const viewDetail = document.getElementById('view-detail');
+            const viewSettings = document.getElementById('view-settings');
 
             // Hide all
-            [viewList, viewForm, viewDetail].forEach(el => el.classList.remove('active'));
+            [viewList, viewForm, viewDetail, viewSettings].forEach(el => el.classList.remove('active'));
             backBtn.classList.add('hidden');
+            settingsBtn.classList.remove('hidden');
 
             if (!hash || hash === '#') {
                 // List View
@@ -442,7 +868,9 @@
                 headerTitle.textContent = '新規レシピ';
                 backBtn.classList.remove('hidden');
                 backBtn.onclick = () => window.history.back();
+                settingsBtn.classList.add('hidden');
                 initForm();
+                updateApiKeyWarnings();
             }
             else if (hash.startsWith('#edit/')) {
                 // Edit View
@@ -454,7 +882,10 @@
                     headerTitle.textContent = 'レシピ編集';
                     backBtn.classList.remove('hidden');
                     backBtn.onclick = () => window.history.back();
+                    settingsBtn.classList.add('hidden');
                     initForm(recipe);
+                    // Switch to manual tab for editing
+                    switchTab('manual');
                 } else {
                     window.location.hash = '';
                 }
@@ -488,6 +919,14 @@
                     window.location.hash = '';
                 }
             }
+            else if (hash === '#settings') {
+                viewSettings.classList.add('active');
+                headerTitle.textContent = '設定';
+                backBtn.classList.remove('hidden');
+                backBtn.onclick = () => window.history.back();
+                settingsBtn.classList.add('hidden');
+                initSettings();
+            }
         }
 
         function getRecipeDataFromHash(hash) {
@@ -502,6 +941,59 @@
                 console.error(e);
                 return null;
             }
+        }
+
+        // --- Settings ---
+        function initSettings() {
+            const apiKeyInput = document.getElementById('api-key-input');
+            const statusEl = document.getElementById('api-key-status');
+            const savedKey = getApiKey();
+
+            if (savedKey) {
+                apiKeyInput.value = savedKey;
+                statusEl.classList.remove('hidden');
+            } else {
+                apiKeyInput.value = '';
+                statusEl.classList.add('hidden');
+            }
+        }
+
+        function updateApiKeyWarnings() {
+            const hasKey = !!getApiKey();
+            const imageWarning = document.getElementById('image-api-warning');
+            const urlWarning = document.getElementById('url-api-warning');
+            const analyzeImageBtn = document.getElementById('analyze-image-btn');
+            const analyzeUrlBtn = document.getElementById('analyze-url-btn');
+
+            if (hasKey) {
+                imageWarning.classList.add('hidden');
+                urlWarning.classList.add('hidden');
+            } else {
+                imageWarning.classList.remove('hidden');
+                urlWarning.classList.remove('hidden');
+            }
+
+            // Update button states based on both API key and content
+            updateAnalyzeButtons();
+        }
+
+        function updateAnalyzeButtons() {
+            const hasKey = !!getApiKey();
+            const hasImage = !!selectedImageBase64;
+            const urlInput = document.getElementById('url-input');
+            const hasUrl = urlInput && urlInput.value.trim().length > 0;
+
+            document.getElementById('analyze-image-btn').disabled = !hasKey || !hasImage;
+            document.getElementById('analyze-url-btn').disabled = !hasKey || !hasUrl;
+        }
+
+        // --- Tabs ---
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+            document.querySelector(`.tab[data-tab="${tabName}"]`).classList.add('active');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
         }
 
         // --- Render: List ---
@@ -653,8 +1145,6 @@
                 const encodedData = hash.substring(6);
                 openAppBtn.href = `recipetimer://sync?data=${encodedData}`;
 
-                openAppBtn.href = `recipetimer://sync?data=${encodedData}`;
-
             } else {
                 saveBtn.classList.add('hidden');
                 openAppBtn.classList.add('hidden');
@@ -666,13 +1156,17 @@
         }
 
         // --- Form Logic ---
-        let editingId = null; // Track editing state
-
         function initForm(recipe = null) {
             editingId = recipe ? recipe.id : null;
             document.getElementById('form-name').value = recipe ? recipe.name : '';
             document.getElementById('form-ingredients').innerHTML = '';
             document.getElementById('form-steps').innerHTML = '';
+
+            // Reset image state
+            selectedImageBase64 = null;
+            selectedImageMimeType = null;
+            document.getElementById('image-preview').classList.add('hidden');
+            document.getElementById('url-input').value = '';
 
             if (recipe) {
                 // Load Ingredients
@@ -684,6 +1178,8 @@
                 addIngredientInput();
                 addStepInput();
             }
+
+            updateAnalyzeButtons();
         }
 
         function addIngredientInput(name = '', amount = '') {
@@ -718,7 +1214,7 @@
             container.appendChild(div);
         }
 
-        document.getElementById('form-save').onclick = () => {
+        function saveRecipe() {
             const name = document.getElementById('form-name').value.trim();
             if (!name) {
                 alert('レシピ名を入力してください');
@@ -784,23 +1280,178 @@
             saveStoredRecipes(stored);
 
             window.location.hash = ''; // Return to list
-        };
+        }
 
-        document.getElementById('form-cancel').onclick = () => {
-            window.history.back();
-        };
+        // --- AI Analysis ---
+        async function analyzeImage() {
+            if (!selectedImageBase64 || !getApiKey()) return;
 
-        document.getElementById('fab-create').onclick = () => {
-            window.location.hash = '#create';
-        };
+            showLoading('画像を解析中...');
+            try {
+                const response = await callGeminiWithImage(IMAGE_ANALYSIS_PROMPT, selectedImageBase64, selectedImageMimeType);
+                const parsed = parseJsonFromResponse(response);
+                populateFormFromAI(parsed);
+                switchTab('manual');
+                alert('解析が完了しました！手入力タブで確認・編集してください。');
+            } catch (error) {
+                console.error('Image analysis error:', error);
+                alert('解析に失敗しました: ' + error.message);
+            } finally {
+                hideLoading();
+            }
+        }
 
-        document.getElementById('search-input').addEventListener('input', (e) => {
-            renderList(e.target.value.trim());
+        async function analyzeUrl() {
+            const url = document.getElementById('url-input').value.trim();
+            if (!url || !getApiKey()) return;
+
+            // Validate URL
+            try {
+                new URL(url);
+            } catch {
+                alert('有効なURLを入力してください');
+                return;
+            }
+
+            showLoading('URLを解析中...');
+            try {
+                const prompt = URL_EXTRACTION_PROMPT.replace('{url}', url);
+                const response = await callGemini(prompt);
+                const parsed = parseJsonFromResponse(response);
+                populateFormFromAI(parsed);
+                switchTab('manual');
+                alert('取り込みが完了しました！手入力タブで確認・編集してください。');
+            } catch (error) {
+                console.error('URL analysis error:', error);
+                alert('取り込みに失敗しました: ' + error.message);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function populateFormFromAI(data) {
+            // Set name
+            document.getElementById('form-name').value = data.name || '';
+
+            // Clear and populate ingredients
+            document.getElementById('form-ingredients').innerHTML = '';
+            (data.ingredients || []).forEach(ing => {
+                addIngredientInput(ing.name, ing.amount);
+            });
+            if ((data.ingredients || []).length === 0) {
+                addIngredientInput();
+            }
+
+            // Clear and populate steps
+            document.getElementById('form-steps').innerHTML = '';
+            (data.steps || []).forEach(step => {
+                addStepInput(step.description, step.duration || 0);
+            });
+            if ((data.steps || []).length === 0) {
+                addStepInput();
+            }
+        }
+
+        // --- Image Handling ---
+        function handleImageFile(file) {
+            if (!file || !file.type.startsWith('image/')) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const result = e.target.result;
+                // Extract base64 data
+                selectedImageBase64 = result.split(',')[1];
+                selectedImageMimeType = file.type;
+
+                // Show preview
+                const preview = document.getElementById('image-preview');
+                preview.src = result;
+                preview.classList.remove('hidden');
+
+                updateAnalyzeButtons();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // --- Event Listeners ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Navigation
+            window.addEventListener('hashchange', navigate);
+            navigate();
+
+            // Settings button
+            document.getElementById('settings-btn').onclick = () => {
+                window.location.hash = '#settings';
+            };
+
+            // FAB
+            document.getElementById('fab-create').onclick = () => {
+                window.location.hash = '#create';
+            };
+
+            // Search
+            document.getElementById('search-input').addEventListener('input', (e) => {
+                renderList(e.target.value.trim());
+            });
+
+            // Form buttons
+            document.getElementById('form-save').onclick = saveRecipe;
+            document.getElementById('form-cancel').onclick = () => window.history.back();
+
+            // Tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.onclick = () => switchTab(tab.dataset.tab);
+            });
+
+            // Image upload
+            const uploadArea = document.getElementById('image-upload-area');
+            const imageInput = document.getElementById('image-file-input');
+            const cameraInput = document.getElementById('camera-input');
+
+            uploadArea.onclick = () => imageInput.click();
+
+            uploadArea.ondragover = (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            };
+            uploadArea.ondragleave = () => uploadArea.classList.remove('dragover');
+            uploadArea.ondrop = (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const file = e.dataTransfer.files[0];
+                handleImageFile(file);
+            };
+
+            imageInput.onchange = (e) => handleImageFile(e.target.files[0]);
+            cameraInput.onchange = (e) => handleImageFile(e.target.files[0]);
+
+            // Analyze buttons
+            document.getElementById('analyze-image-btn').onclick = analyzeImage;
+            document.getElementById('analyze-url-btn').onclick = analyzeUrl;
+
+            // URL input change
+            document.getElementById('url-input').addEventListener('input', updateAnalyzeButtons);
+
+            // Settings
+            document.getElementById('save-api-key-btn').onclick = () => {
+                const key = document.getElementById('api-key-input').value.trim();
+                if (!key) {
+                    alert('APIキーを入力してください');
+                    return;
+                }
+                saveApiKey(key);
+                document.getElementById('api-key-status').classList.remove('hidden');
+                alert('APIキーを保存しました');
+            };
+
+            document.getElementById('clear-api-key-btn').onclick = () => {
+                if (!confirm('APIキーをクリアしますか？')) return;
+                clearApiKey();
+                document.getElementById('api-key-input').value = '';
+                document.getElementById('api-key-status').classList.add('hidden');
+                alert('APIキーをクリアしました');
+            };
         });
-
-        // --- Init ---
-        window.addEventListener('hashchange', navigate);
-        window.addEventListener('DOMContentLoaded', navigate);
 
     </script>
 </body>
