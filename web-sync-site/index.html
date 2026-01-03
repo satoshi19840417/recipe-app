@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --tint: #FF6B35;
@@ -443,6 +444,74 @@
             background: var(--danger);
         }
 
+        /* Login */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .login-logo {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .login-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .login-subtitle {
+            color: var(--secondary);
+            margin-bottom: 32px;
+        }
+
+        .google-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 14px 24px;
+            background: white;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 250px;
+        }
+
+        .google-btn:hover {
+            background: #f5f5f5;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .google-btn img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
         /* Utilities */
         .hidden {
             display: none !important;
@@ -467,11 +536,27 @@
 </head>
 
 <body>
-    <div id="app" class="container">
+    <!-- Login View -->
+    <div id="view-login" class="login-container">
+        <div class="login-logo">🍳</div>
+        <h1 class="login-title">レシピタイマー</h1>
+        <p class="login-subtitle">ログインしてレシピを管理しましょう</p>
+        <button id="google-login-btn" class="google-btn">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+            Googleでログイン
+        </button>
+        <p id="login-error" class="setting-description hidden" style="color: var(--danger); margin-top: 16px;"></p>
+    </div>
+
+    <div id="app" class="container hidden">
         <!-- Header -->
         <header class="header">
             <button id="back-btn" class="header-btn hidden">＜ 戻る</button>
             <h1 id="header-title" class="header-title">レシピタイマー</h1>
+            <div id="user-menu" class="user-info hidden">
+                <img id="user-avatar" class="user-avatar" src="" alt="">
+                <button id="logout-btn" class="header-btn" style="padding: 4px 8px; font-size: 12px;">ログアウト</button>
+            </div>
             <button id="settings-btn" class="header-icon-btn">⚙️</button>
         </header>
 
@@ -651,10 +736,99 @@
         const LS_API_KEY = 'recipeTimer_geminiApiKey';
         const GEMINI_API_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
 
+        // --- Supabase Config ---
+        const SUPABASE_URL = 'https://ylyswgfmopidmecwapol.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_gMrVdqffW7enRZl00S8lzg_X6JAx4wC';
+
+        let supabase = null;
+        let currentUser = null;
+
         // --- State ---
         let editingId = null;
         let selectedImageBase64 = null;
         let selectedImageMimeType = null;
+
+        // --- Supabase Auth ---
+        function initSupabase() {
+            if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                return true;
+            }
+            return false;
+        }
+
+        async function checkAuthState() {
+            if (!supabase) return null;
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                return session?.user || null;
+            } catch (e) {
+                console.error('Auth check error:', e);
+                return null;
+            }
+        }
+
+        async function signInWithGoogle() {
+            if (!supabase) {
+                showLoginError('Supabaseの初期化に失敗しました');
+                return;
+            }
+            try {
+                const { error } = await supabase.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: window.location.origin + window.location.pathname
+                    }
+                });
+                if (error) throw error;
+            } catch (e) {
+                console.error('Sign in error:', e);
+                showLoginError('ログインに失敗しました: ' + e.message);
+            }
+        }
+
+        async function signOut() {
+            if (!supabase) return;
+            try {
+                await supabase.auth.signOut();
+                currentUser = null;
+                updateAuthUI();
+            } catch (e) {
+                console.error('Sign out error:', e);
+            }
+        }
+
+        function showLoginError(message) {
+            const el = document.getElementById('login-error');
+            el.textContent = message;
+            el.classList.remove('hidden');
+        }
+
+        function updateAuthUI() {
+            const loginView = document.getElementById('view-login');
+            const appView = document.getElementById('app');
+            const userMenu = document.getElementById('user-menu');
+            const userAvatar = document.getElementById('user-avatar');
+
+            if (currentUser) {
+                loginView.classList.add('hidden');
+                appView.classList.remove('hidden');
+                userMenu.classList.remove('hidden');
+
+                // Set avatar
+                const avatarUrl = currentUser.user_metadata?.avatar_url || currentUser.user_metadata?.picture || '';
+                if (avatarUrl) {
+                    userAvatar.src = avatarUrl;
+                    userAvatar.style.display = 'block';
+                } else {
+                    userAvatar.style.display = 'none';
+                }
+            } else {
+                loginView.classList.remove('hidden');
+                appView.classList.add('hidden');
+                userMenu.classList.add('hidden');
+            }
+        }
 
         // --- Utils ---
         function getStoredRecipes() {
@@ -1374,10 +1548,36 @@ URL: {url}
         }
 
         // --- Event Listeners ---
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Initialize Supabase
+            if (initSupabase()) {
+                // Check auth state
+                currentUser = await checkAuthState();
+                updateAuthUI();
+
+                // Listen for auth changes
+                supabase.auth.onAuthStateChange((event, session) => {
+                    currentUser = session?.user || null;
+                    updateAuthUI();
+                    if (currentUser) {
+                        navigate();
+                    }
+                });
+            } else {
+                // Supabase not loaded, show app anyway (for development)
+                document.getElementById('view-login').classList.add('hidden');
+                document.getElementById('app').classList.remove('hidden');
+            }
+
+            // Google login button
+            document.getElementById('google-login-btn').onclick = signInWithGoogle;
+
+            // Logout button
+            document.getElementById('logout-btn').onclick = signOut;
+
             // Navigation
             window.addEventListener('hashchange', navigate);
-            navigate();
+            if (currentUser) navigate();
 
             // Settings button
             document.getElementById('settings-btn').onclick = () => {
