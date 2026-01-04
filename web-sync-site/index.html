@@ -1678,6 +1678,32 @@ URL: {url}
         }
 
     </script>
+    <!-- Fallback initializer script - runs after main script -->
+    <script>
+        // If main script didn't initialize, try again
+        (function () {
+            console.log('[Recipe App Fallback] Checking initialization...');
+            const loginView = document.getElementById('view-login');
+            const appView = document.getElementById('app');
+
+            // If login view is visible and app is hidden, we need to bypass
+            if (loginView && !loginView.classList.contains('hidden')) {
+                console.log('[Recipe App Fallback] Bypassing login...');
+                loginView.classList.add('hidden');
+                if (appView) {
+                    appView.classList.remove('hidden');
+                }
+                // Try to call navigate if it exists
+                if (typeof navigate === 'function') {
+                    navigate();
+                } else {
+                    // Fallback: show list view
+                    const viewList = document.getElementById('view-list');
+                    if (viewList) viewList.classList.add('active');
+                }
+            }
+        })();
+    </script>
 </body>
 
 </html>
