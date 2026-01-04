@@ -1549,9 +1549,13 @@ URL: {url}
 
         // --- Event Listeners ---
         document.addEventListener('DOMContentLoaded', async () => {
+            // Assign button handlers FIRST so UI is responsive immediately
+            document.getElementById('google-login-btn').onclick = signInWithGoogle;
+            document.getElementById('logout-btn').onclick = signOut;
+
             // Initialize Supabase
             if (initSupabase()) {
-                // Check auth state
+                // Check auth state (async - don't block UI)
                 currentUser = await checkAuthState();
                 updateAuthUI();
 
@@ -1568,12 +1572,6 @@ URL: {url}
                 document.getElementById('view-login').classList.add('hidden');
                 document.getElementById('app').classList.remove('hidden');
             }
-
-            // Google login button
-            document.getElementById('google-login-btn').onclick = signInWithGoogle;
-
-            // Logout button
-            document.getElementById('logout-btn').onclick = signOut;
 
             // Navigation
             window.addEventListener('hashchange', navigate);
