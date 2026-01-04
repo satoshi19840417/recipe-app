@@ -1553,6 +1553,13 @@ URL: {url}
             document.getElementById('google-login-btn').onclick = signInWithGoogle;
             document.getElementById('logout-btn').onclick = signOut;
 
+            // TEMPORARILY BYPASS LOGIN - Show app directly
+            // TODO: Re-enable Google login when OAuth is configured
+            document.getElementById('view-login').classList.add('hidden');
+            document.getElementById('app').classList.remove('hidden');
+            navigate();
+
+            /* ORIGINAL AUTH CODE - COMMENTED OUT FOR NOW
             // Initialize Supabase
             if (initSupabase()) {
                 // Check auth state (async - don't block UI)
@@ -1572,10 +1579,11 @@ URL: {url}
                 document.getElementById('view-login').classList.add('hidden');
                 document.getElementById('app').classList.remove('hidden');
             }
+            */
 
             // Navigation
             window.addEventListener('hashchange', navigate);
-            if (currentUser) navigate();
+
 
             // Settings button
             document.getElementById('settings-btn').onclick = () => {
