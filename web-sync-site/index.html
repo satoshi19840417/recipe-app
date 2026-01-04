@@ -1661,10 +1661,20 @@ URL: {url}
         }
 
         // Run initApp when DOM is ready, or immediately if already ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initApp);
-        } else {
-            initApp();
+        console.log('[Recipe App] Script loaded, readyState:', document.readyState);
+        try {
+            if (document.readyState === 'loading') {
+                console.log('[Recipe App] Waiting for DOMContentLoaded...');
+                document.addEventListener('DOMContentLoaded', function () {
+                    console.log('[Recipe App] DOMContentLoaded fired, calling initApp()');
+                    initApp();
+                });
+            } else {
+                console.log('[Recipe App] DOM already ready, calling initApp() immediately');
+                initApp();
+            }
+        } catch (e) {
+            console.error('[Recipe App] Error during initialization:', e);
         }
 
     </script>
