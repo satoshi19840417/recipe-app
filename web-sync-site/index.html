@@ -1548,7 +1548,8 @@ URL: {url}
         }
 
         // --- Event Listeners ---
-        document.addEventListener('DOMContentLoaded', async () => {
+        // Initialize when DOM is ready (works even if already loaded)
+        function initApp() {
             // Assign button handlers FIRST so UI is responsive immediately
             document.getElementById('google-login-btn').onclick = signInWithGoogle;
             document.getElementById('logout-btn').onclick = signOut;
@@ -1657,7 +1658,14 @@ URL: {url}
                 document.getElementById('api-key-status').classList.add('hidden');
                 alert('APIキーをクリアしました');
             };
-        });
+        }
+
+        // Run initApp when DOM is ready, or immediately if already ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
 
     </script>
 </body>
