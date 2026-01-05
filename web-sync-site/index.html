@@ -1693,15 +1693,99 @@ URL: {url}
                 if (appView) {
                     appView.classList.remove('hidden');
                 }
-                // Try to call navigate if it exists
-                if (typeof navigate === 'function') {
-                    navigate();
-                } else {
-                    // Fallback: show list view
-                    const viewList = document.getElementById('view-list');
-                    if (viewList) viewList.classList.add('active');
-                }
             }
+
+            // Wait a bit and check if initApp was called
+            setTimeout(function () {
+                console.log('[Recipe App Fallback] Delayed check - initApp exists:', typeof initApp);
+
+                // If initApp exists but wasn't called, call it now
+                if (typeof initApp === 'function') {
+                    const fabBtn = document.getElementById('fab-create');
+                    // Check if event listeners are NOT attached yet (onclick is null)
+                    if (fabBtn && !fabBtn.onclick) {
+                        console.log('[Recipe App Fallback] Calling initApp()...');
+                        try {
+                            initApp();
+                        } catch (e) {
+                            console.error('[Recipe App Fallback] initApp error:', e);
+                        }
+                    }
+                } else {
+                    // initApp doesn't exist - set up minimal navigation manually
+                    console.log('[Recipe App Fallback] Setting up minimal navigation...');
+
+                    // FAB button
+                    const fabBtn = document.getElementById('fab-create');
+                    if (fabBtn && !fabBtn.onclick) {
+                        fabBtn.onclick = function () {
+                            window.location.hash = '#create';
+                        };
+                    }
+
+                    // Settings button
+                    const settingsBtn = document.getElementById('settings-btn');
+                    if (settingsBtn && !settingsBtn.onclick) {
+                        settingsBtn.onclick = function () {
+                            window.location.hash = '#settings';
+                        };
+                    }
+
+                    // Back button
+                    const backBtn = document.getElementById('back-btn');
+                    if (backBtn && !backBtn.onclick) {
+                        backBtn.onclick = function () {
+                            window.history.back();
+                        };
+                    }
+
+                    // Hash change navigation
+                    if (typeof navigate === 'function') {
+                        window.addEventListener('hashchange', navigate);
+                        navigate();
+                    } else {
+                        // Minimal hash change handler
+                        window.addEventListener('hashchange', function () {
+                            const hash = window.location.hash;
+                            const viewList = document.getElementById('view-list');
+                            const viewForm = document.getElementById('view-form');
+                            const viewDetail = document.getElementById('view-detail');
+                            const viewSettings = document.getElementById('view-settings');
+                            const headerTitle = document.getElementById('header-title');
+                            const backBtn = document.getElementById('back-btn');
+                            const settingsBtn = document.getElementById('settings-btn');
+
+                            // Hide all views
+                            [viewList, viewForm, viewDetail, viewSettings].forEach(function (el) {
+                                if (el) el.classList.remove('active');
+                            });
+                            if (backBtn) backBtn.classList.add('hidden');
+                            if (settingsBtn) settingsBtn.classList.remove('hidden');
+
+                            if (!hash || hash === '#' || hash === '') {
+                                if (viewList) viewList.classList.add('active');
+                                if (headerTitle) headerTitle.textContent = 'レシピ一覧';
+                            } else if (hash === '#create') {
+                                if (viewForm) viewForm.classList.add('active');
+                                if (headerTitle) headerTitle.textContent = '新規レシピ';
+                                if (backBtn) backBtn.classList.remove('hidden');
+                                if (settingsBtn) settingsBtn.classList.add('hidden');
+                            } else if (hash === '#settings') {
+                                if (viewSettings) viewSettings.classList.add('active');
+                                if (headerTitle) headerTitle.textContent = '設定';
+                                if (backBtn) backBtn.classList.remove('hidden');
+                                if (settingsBtn) settingsBtn.classList.add('hidden');
+                            }
+                        });
+
+                        // Navigate to current hash or list view
+                        const viewList = document.getElementById('view-list');
+                        if (viewList && !window.location.hash) {
+                            viewList.classList.add('active');
+                        }
+                    }
+                }
+            }, 100);
         })();
     </script>
 </body>
