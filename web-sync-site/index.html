@@ -1809,6 +1809,34 @@ URL: {url}
             }, 100);
         })();
     </script>
+    <!-- Guaranteed API Key Handlers -->
+    <script>
+        (function () {
+            function saveKey() {
+                var key = document.getElementById('api-key-input');
+                if (!key || !key.value.trim()) { alert('APIキーを入力してください'); return; }
+                localStorage.setItem('recipeTimer_geminiApiKey', key.value.trim());
+                var status = document.getElementById('api-key-status');
+                if (status) status.classList.remove('hidden');
+                alert('APIキーを保存しました');
+            }
+            function clearKey() {
+                if (!confirm('APIキーをクリアしますか？')) return;
+                localStorage.removeItem('recipeTimer_geminiApiKey');
+                var inp = document.getElementById('api-key-input');
+                var status = document.getElementById('api-key-status');
+                if (inp) inp.value = '';
+                if (status) status.classList.add('hidden');
+                alert('APIキーをクリアしました');
+            }
+            window.handleSaveApiKey = saveKey;
+            window.handleClearApiKey = clearKey;
+            var saveBtn = document.getElementById('save-api-key-btn');
+            var clearBtn = document.getElementById('clear-api-key-btn');
+            if (saveBtn) saveBtn.onclick = saveKey;
+            if (clearBtn) clearBtn.onclick = clearKey;
+        })();
+    </script>
 </body>
 
 </html>
