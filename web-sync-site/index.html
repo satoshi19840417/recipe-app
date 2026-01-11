@@ -718,8 +718,9 @@
             </div>
 
             <div class="flex gap-2">
-                <button id="save-api-key-btn" class="action-btn btn-primary">保存</button>
-                <button id="clear-api-key-btn" class="action-btn btn-secondary">クリア</button>
+                <button id="save-api-key-btn" class="action-btn btn-primary" onclick="handleSaveApiKey()">保存</button>
+                <button id="clear-api-key-btn" class="action-btn btn-secondary"
+                    onclick="handleClearApiKey()">クリア</button>
             </div>
         </div>
     </div>
@@ -734,7 +735,7 @@
         // --- Constants ---
         const LS_KEY = 'recipeTimer_recipes';
         const LS_API_KEY = 'recipeTimer_geminiApiKey';
-        const GEMINI_API_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
+        const GEMINI_API_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
         // --- Supabase Config ---
         const SUPABASE_URL = 'https://ylyswgfmopidmecwapol.supabase.co';
@@ -853,6 +854,26 @@
 
         function clearApiKey() {
             localStorage.removeItem(LS_API_KEY);
+        }
+
+        // Global click handlers for API key buttons
+        function handleSaveApiKey() {
+            const key = document.getElementById('api-key-input').value.trim();
+            if (!key) {
+                alert('APIキーを入力してください');
+                return;
+            }
+            saveApiKey(key);
+            document.getElementById('api-key-status').classList.remove('hidden');
+            alert('APIキーを保存しました');
+        }
+
+        function handleClearApiKey() {
+            if (!confirm('APIキーをクリアしますか？')) return;
+            clearApiKey();
+            document.getElementById('api-key-input').value = '';
+            document.getElementById('api-key-status').classList.add('hidden');
+            alert('APIキーをクリアしました');
         }
 
         function generateId() {
