@@ -1863,31 +1863,80 @@ URL: {url}
             var imagePreview = document.getElementById('image-preview');
             var analyzeBtn = document.getElementById('analyze-image-btn');
 
+            // Enable multiple file selection
+            if (imageInput) imageInput.setAttribute('multiple', 'true');
+
+            // Store multiple images
+            window.selectedImages = [];
+
             if (uploadArea && imageInput) {
                 uploadArea.onclick = function () {
                     imageInput.click();
                 };
                 uploadArea.style.cursor = 'pointer';
+
+                // Drag & Drop
+                uploadArea.ondragover = function (e) {
+                    e.preventDefault();
+                    uploadArea.style.borderColor = '#FF6B35';
+                    uploadArea.style.background = 'rgba(255, 107, 53, 0.1)';
+                };
+                uploadArea.ondragleave = function (e) {
+                    e.preventDefault();
+                    uploadArea.style.borderColor = '';
+                    uploadArea.style.background = '';
+                };
+                uploadArea.ondrop = function (e) {
+                    e.preventDefault();
+                    uploadArea.style.borderColor = '';
+                    uploadArea.style.background = '';
+                    var files = e.dataTransfer.files;
+                    handleImageFiles(files);
+                };
+            }
+
+            function handleImageFiles(files) {
+                if (!files || files.length === 0) return;
+                window.selectedImages = [];
+                var loaded = 0;
+                var total = files.length;
+
+                for (var i = 0; i < files.length; i++) {
+                    (function (file) {
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            window.selectedImages.push({
+                                base64: e.target.result.split(',')[1],
+                                mimeType: file.type,
+                                dataUrl: e.target.result
+                            });
+                            loaded++;
+                            if (loaded === total) {
+                                // Show first image as preview
+                                if (imagePreview && window.selectedImages.length > 0) {
+                                    imagePreview.src = window.selectedImages[0].dataUrl;
+                                    imagePreview.classList.remove('hidden');
+                                }
+                                // For backward compatibility
+                                window.selectedImageBase64 = window.selectedImages[0].base64;
+                                window.selectedImageMimeType = window.selectedImages[0].mimeType;
+                                if (analyzeBtn) analyzeBtn.disabled = false;
+                                alert(total + '枚の画像を選択しました');
+                            }
+                        };
+                        reader.readAsDataURL(file);
+                    })(files[i]);
+                }
             }
 
             function handleImageFile(file) {
                 if (!file) return;
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    if (imagePreview) {
-                        imagePreview.src = e.target.result;
-                        imagePreview.classList.remove('hidden');
-                    }
-                    window.selectedImageBase64 = e.target.result.split(',')[1];
-                    window.selectedImageMimeType = file.type;
-                    if (analyzeBtn) analyzeBtn.disabled = false;
-                };
-                reader.readAsDataURL(file);
+                handleImageFiles([file]);
             }
 
             if (imageInput) {
                 imageInput.onchange = function (e) {
-                    handleImageFile(e.target.files[0]);
+                    handleImageFiles(e.target.files);
                 };
             }
             if (cameraInput) {
