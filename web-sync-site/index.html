@@ -1944,6 +1944,73 @@ URL: {url}
                     handleImageFile(e.target.files[0]);
                 };
             }
+
+            // Analyze image button handler
+            if (analyzeBtn) {
+                analyzeBtn.onclick = function () {
+                    var apiKey = localStorage.getItem('recipeTimer_geminiApiKey');
+                    if (!apiKey) {
+                        alert('APIキーが設定されていません。設定画面でAPIキーを入力してください。');
+                        return;
+                    }
+                    if (!window.selectedImageBase64) {
+                        alert('画像を選択してください');
+                        return;
+                    }
+
+                    // Show loading
+                    var loadingOverlay = document.getElementById('loading-overlay');
+                    var loadingText = document.getElementById('loading-text');
+                    if (loadingOverlay) loadingOverlay.classList.remove('hidden');
+                    if (loadingText) loadingText.textContent = 'AIで画像を解析中...';
+
+                    var prompt = 'この画像からレシピ情報を抽出してください。画像がレシピに関連しない場合は、画像に写っている料理を推測してレシピを生成してください。以下のJSON形式で回答してください：{\"name\": \"料理名\", \"ingredients\": [{\"name\": \"材料名\", \"amount\": \"分量\"}], \"steps\": [{\"description\": \"調理手順の説明\", \"duration\": 秒数}]} 注意事項：日本語で回答してください。';
+
+                    fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + apiKey, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [
+                                    { text: prompt },
+                                    { inlineData: { mimeType: window.selectedImageMimeType, data: window.selectedImageBase64 } }
+                                ]
+                            }],
+                            generationConfig: { temperature: 0.4, maxOutputTokens: 4096 }
+                        })
+                    })
+                        .then(function (response) { return response.json(); })
+                        .then(function (data) {
+                            if (loadingOverlay) loadingOverlay.classList.add('hidden');
+                            if (data.error) {
+                                alert('APIエラー: ' + data.error.message);
+                                return;
+                            }
+                            var text = data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0] && data.candidates[0].content.parts[0].text;
+                            if (!text) {
+                                alert('レスポンスが空です');
+                                return;
+                            }
+                            try {
+                                var jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
+                                var recipe = JSON.parse(jsonStr);
+                                alert('レシピを解析しました: ' + recipe.name);
+                                // Fill in the form
+                                if (typeof switchTab === 'function') switchTab('manual');
+                                var nameInput = document.getElementById('form-name');
+                                if (nameInput) nameInput.value = recipe.name || '';
+                                // Store for later use
+                                window.parsedRecipe = recipe;
+                            } catch (e) {
+                                alert('JSONパースエラー: ' + e.message);
+                            }
+                        })
+                        .catch(function (err) {
+                            if (loadingOverlay) loadingOverlay.classList.add('hidden');
+                            alert('通信エラー: ' + err.message);
+                        });
+                };
+            }
         })();
     </script>
 </body>
