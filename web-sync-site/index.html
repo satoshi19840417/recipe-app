@@ -1855,6 +1855,46 @@ URL: {url}
                     switchTab(tab.getAttribute('data-tab'));
                 };
             });
+
+            // Image upload handlers
+            var uploadArea = document.getElementById('image-upload-area');
+            var imageInput = document.getElementById('image-file-input');
+            var cameraInput = document.getElementById('camera-input');
+            var imagePreview = document.getElementById('image-preview');
+            var analyzeBtn = document.getElementById('analyze-image-btn');
+
+            if (uploadArea && imageInput) {
+                uploadArea.onclick = function () {
+                    imageInput.click();
+                };
+                uploadArea.style.cursor = 'pointer';
+            }
+
+            function handleImageFile(file) {
+                if (!file) return;
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    if (imagePreview) {
+                        imagePreview.src = e.target.result;
+                        imagePreview.classList.remove('hidden');
+                    }
+                    window.selectedImageBase64 = e.target.result.split(',')[1];
+                    window.selectedImageMimeType = file.type;
+                    if (analyzeBtn) analyzeBtn.disabled = false;
+                };
+                reader.readAsDataURL(file);
+            }
+
+            if (imageInput) {
+                imageInput.onchange = function (e) {
+                    handleImageFile(e.target.files[0]);
+                };
+            }
+            if (cameraInput) {
+                cameraInput.onchange = function (e) {
+                    handleImageFile(e.target.files[0]);
+                };
+            }
         })();
     </script>
 </body>
