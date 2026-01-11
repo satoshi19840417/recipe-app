@@ -1812,6 +1812,7 @@ URL: {url}
     <!-- Guaranteed API Key Handlers -->
     <script>
         (function () {
+            // API Key handlers
             function saveKey() {
                 var key = document.getElementById('api-key-input');
                 if (!key || !key.value.trim()) { alert('APIキーを入力してください'); return; }
@@ -1835,6 +1836,25 @@ URL: {url}
             var clearBtn = document.getElementById('clear-api-key-btn');
             if (saveBtn) saveBtn.onclick = saveKey;
             if (clearBtn) clearBtn.onclick = clearKey;
+
+            // Tab switching
+            function switchTab(tabName) {
+                var tabs = document.querySelectorAll('.tab');
+                var contents = document.querySelectorAll('.tab-content');
+                tabs.forEach(function (t) { t.classList.remove('active'); });
+                contents.forEach(function (c) { c.classList.remove('active'); });
+                var activeTab = document.querySelector('.tab[data-tab=\"' + tabName + '\"]');
+                var activeContent = document.getElementById('tab-' + tabName);
+                if (activeTab) activeTab.classList.add('active');
+                if (activeContent) activeContent.classList.add('active');
+            }
+            window.switchTab = switchTab;
+            var allTabs = document.querySelectorAll('.tab[data-tab]');
+            allTabs.forEach(function (tab) {
+                tab.onclick = function () {
+                    switchTab(tab.getAttribute('data-tab'));
+                };
+            });
         })();
     </script>
 </body>
