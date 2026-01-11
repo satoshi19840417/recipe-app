@@ -856,8 +856,8 @@
             localStorage.removeItem(LS_API_KEY);
         }
 
-        // Global click handlers for API key buttons
-        function handleSaveApiKey() {
+        // Global click handlers for API key buttons - explicitly assign to window for onclick access
+        window.handleSaveApiKey = function () {
             const key = document.getElementById('api-key-input').value.trim();
             if (!key) {
                 alert('APIキーを入力してください');
@@ -866,15 +866,15 @@
             saveApiKey(key);
             document.getElementById('api-key-status').classList.remove('hidden');
             alert('APIキーを保存しました');
-        }
+        };
 
-        function handleClearApiKey() {
+        window.handleClearApiKey = function () {
             if (!confirm('APIキーをクリアしますか？')) return;
             clearApiKey();
             document.getElementById('api-key-input').value = '';
             document.getElementById('api-key-status').classList.add('hidden');
             alert('APIキーをクリアしました');
-        }
+        };
 
         function generateId() {
             return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
