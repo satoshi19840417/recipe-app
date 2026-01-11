@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>レシピタイマー - 管理</title>
+    <title>レシピタイマ�E - 管琁E/title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
@@ -539,8 +539,8 @@
     <!-- Login View -->
     <div id="view-login" class="login-container">
         <div class="login-logo">🍳</div>
-        <h1 class="login-title">レシピタイマー</h1>
-        <p class="login-subtitle">ログインしてレシピを管理しましょう</p>
+        <h1 class="login-title">レシピタイマ�E</h1>
+        <p class="login-subtitle">ログインしてレシピを管琁E��ましょぁE/p>
         <button id="google-login-btn" class="google-btn">
             <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
             Googleでログイン
@@ -551,13 +551,13 @@
     <div id="app" class="container hidden">
         <!-- Header -->
         <header class="header">
-            <button id="back-btn" class="header-btn hidden">＜ 戻る</button>
-            <h1 id="header-title" class="header-title">レシピタイマー</h1>
+            <button id="back-btn" class="header-btn hidden">�E�E戻めE/button>
+            <h1 id="header-title" class="header-title">レシピタイマ�E</h1>
             <div id="user-menu" class="user-info hidden">
                 <img id="user-avatar" class="user-avatar" src="" alt="">
-                <button id="logout-btn" class="header-btn" style="padding: 4px 8px; font-size: 12px;">ログアウト</button>
+                <button id="logout-btn" class="header-btn" style="padding: 4px 8px; font-size: 12px;">ログアウチE/button>
             </div>
-            <button id="settings-btn" class="header-icon-btn">⚙️</button>
+            <button id="settings-btn" class="header-icon-btn">⚙︁E/button>
         </header>
 
         <!-- View: Recipe List (Home) -->
@@ -573,7 +573,7 @@
             <div id="empty-state" class="empty-state hidden">
                 <div style="font-size: 48px; margin-bottom: 16px">🍳</div>
                 <h3 id="empty-title">レシピがありません</h3>
-                <p id="empty-desc">右下のボタンから新しいレシピを作成するか、<br>アプリから共有されたレシピを保存してください。</p>
+                <p id="empty-desc">右下�Eボタンから新しいレシピを作�Eするか、Ebr>アプリから共有されたレシピを保存してください、E/p>
             </div>
 
             <button id="fab-create" class="fab">+</button>
@@ -583,8 +583,8 @@
         <div id="view-form" class="view">
             <!-- Tabs for input method -->
             <div class="tabs">
-                <button class="tab active" data-tab="manual">✏️ 手入力</button>
-                <button class="tab" data-tab="image">📷 画像から</button>
+                <button class="tab active" data-tab="manual">✏︁E手�E劁E/button>
+                <button class="tab" data-tab="image">📷 画像かめE/button>
                 <button class="tab" data-tab="url">🔗 URLから</button>
             </div>
 
@@ -592,7 +592,7 @@
             <div id="tab-manual" class="tab-content active">
                 <div class="form-group">
                     <label class="form-label">レシピ名</label>
-                    <input type="text" id="form-name" class="form-input" placeholder="例: カレーライス">
+                    <input type="text" id="form-name" class="form-input" placeholder="侁E カレーライス">
                 </div>
 
                 <div class="section-header">
@@ -604,7 +604,7 @@
                 </div>
 
                 <div class="section-header">
-                    <label class="form-label" style="margin:0">作り方・工程</label>
+                    <label class="form-label" style="margin:0">作り方・工稁E/label>
                     <button type="button" class="add-btn" onclick="addStepInput()">+ 追加</button>
                 </div>
                 <div id="form-steps">
@@ -613,7 +613,7 @@
 
                 <div class="mt-4 flex gap-2">
                     <button id="form-cancel" class="action-btn btn-secondary">キャンセル</button>
-                    <button id="form-save" class="action-btn btn-primary">保存する</button>
+                    <button id="form-save" class="action-btn btn-primary">保存すめE/button>
                 </div>
             </div>
 
@@ -621,14 +621,14 @@
             <div id="tab-image" class="tab-content">
                 <div class="ai-upload-area" id="image-upload-area">
                     <div style="font-size: 48px; margin-bottom: 12px">📷</div>
-                    <p style="font-weight: 600; margin-bottom: 8px">画像をアップロード</p>
-                    <p style="font-size: 14px; color: var(--secondary)">クリックして選択、またはドラッグ＆ドロップ</p>
+                    <p style="font-weight: 600; margin-bottom: 8px">画像をアチE�EローチE/p>
+                    <p style="font-size: 14px; color: var(--secondary)">クリチE��して選択、また�EドラチE���E�E��ロチE�E</p>
                     <input type="file" id="image-file-input" accept="image/*" style="display: none">
                 </div>
                 <img id="image-preview" class="preview-image hidden" alt="プレビュー">
 
                 <div class="mt-4" style="text-align: center">
-                    <p style="font-size: 13px; color: var(--secondary); margin-bottom: 8px">または</p>
+                    <p style="font-size: 13px; color: var(--secondary); margin-bottom: 8px">また�E</p>
                     <label class="action-btn btn-secondary"
                         style="display: inline-block; width: auto; padding: 12px 24px;">
                         📸 カメラで撮影
@@ -639,12 +639,12 @@
 
                 <div class="mt-4">
                     <button id="analyze-image-btn" class="action-btn btn-primary" disabled>
-                        🔍 AIで解析する
+                        🔍 AIで解析すめE
                     </button>
                 </div>
                 <p id="image-api-warning" class="setting-description hidden"
                     style="color: var(--danger); text-align: center;">
-                    ⚠️ APIキーが設定されていません。設定画面でAPIキーを入力してください。
+                    ⚠�E�EAPIキーが設定されてぁE��せん。設定画面でAPIキーを�E力してください、E
                 </p>
             </div>
 
@@ -653,7 +653,7 @@
                 <div class="form-group">
                     <label class="form-label">レシピURL</label>
                     <input type="url" id="url-input" class="form-input" placeholder="https://example.com/recipe/...">
-                    <p class="setting-description">クックパッド、楽天レシピなどのURLを入力すると、AIがレシピを推測します。</p>
+                    <p class="setting-description">クチE��パッド、楽天レシピなどのURLを�E力すると、AIがレシピを推測します、E/p>
                 </div>
 
                 <div class="mt-4">
@@ -663,7 +663,7 @@
                 </div>
                 <p id="url-api-warning" class="setting-description hidden"
                     style="color: var(--danger); text-align: center;">
-                    ⚠️ APIキーが設定されていません。設定画面でAPIキーを入力してください。
+                    ⚠�E�EAPIキーが設定されてぁE��せん。設定画面でAPIキーを�E力してください、E
                 </p>
             </div>
         </div>
@@ -673,10 +673,10 @@
             <!-- Cooking Time -->
             <div id="cooking-time-section" class="cooking-time-card hidden"
                 style="margin-bottom: 16px; padding: 16px; background: var(--card); border-radius: 12px; display: flex; align-items: center; gap: 12px; border: 1px solid var(--border);">
-                <span style="font-size: 24px">⏱️</span>
+                <span style="font-size: 24px">⏱�E�E/span>
                 <div>
-                    <div style="font-size: 12px; color: var(--secondary)">総調理時間</div>
-                    <div id="total-time" style="font-size: 18px; font-weight: 600; color: var(--tint)">--分</div>
+                    <div style="font-size: 12px; color: var(--secondary)">総調琁E��閁E/div>
+                    <div id="total-time" style="font-size: 18px; font-weight: 600; color: var(--tint)">--刁E/div>
                 </div>
             </div>
 
@@ -693,8 +693,8 @@
             </div>
 
             <div class="mt-4">
-                <button id="save-shared-btn" class="action-btn btn-primary hidden">このレシピを保存</button>
-                <button id="edit-local-btn" class="action-btn btn-secondary hidden">レシピを編集</button>
+                <button id="save-shared-btn" class="action-btn btn-primary hidden">こ�Eレシピを保孁E/button>
+                <button id="edit-local-btn" class="action-btn btn-secondary hidden">レシピを編雁E/button>
                 <a id="open-app-btn" href="#" class="action-btn btn-secondary hidden"
                     style="display:flex; justify-content:center; align-items:center;">アプリで開く</a>
             </div>
@@ -707,18 +707,18 @@
                 <input type="password" id="api-key-input" class="form-input" placeholder="AIzaSy...">
                 <div id="api-key-status" class="api-key-status hidden">
                     <span class="status-dot success"></span>
-                    <span>APIキーが設定されています</span>
+                    <span>APIキーが設定されてぁE��ぁE/span>
                 </div>
                 <p class="setting-description">
-                    Google AI StudioでAPIキーを取得できます。<br>
+                    Google AI StudioでAPIキーを取得できます、Ebr>
                     <a href="https://aistudio.google.com/apikey" target="_blank" style="color: var(--tint)">
-                        👉 APIキーを取得する
+                        👉 APIキーを取得すめE
                     </a>
                 </p>
             </div>
 
             <div class="flex gap-2">
-                <button id="save-api-key-btn" class="action-btn btn-primary" onclick="handleSaveApiKey()">保存</button>
+                <button id="save-api-key-btn" class="action-btn btn-primary" onclick="handleSaveApiKey()">保孁E/button>
                 <button id="clear-api-key-btn" class="action-btn btn-secondary"
                     onclick="handleClearApiKey()">クリア</button>
             </div>
@@ -860,7 +860,7 @@
         window.handleSaveApiKey = function () {
             const key = document.getElementById('api-key-input').value.trim();
             if (!key) {
-                alert('APIキーを入力してください');
+                alert('APIキーを�E力してください');
                 return;
             }
             saveApiKey(key);
@@ -869,7 +869,7 @@
         };
 
         window.handleClearApiKey = function () {
-            if (!confirm('APIキーをクリアしますか？')) return;
+            if (!confirm('APIキーをクリアしますか�E�E)) return;
             clearApiKey();
             document.getElementById('api-key-input').value = '';
             document.getElementById('api-key-status').classList.add('hidden');
@@ -899,7 +899,7 @@
         async function callGemini(prompt) {
             const apiKey = getApiKey();
             if (!apiKey) {
-                throw new Error('APIキーが設定されていません');
+                throw new Error('APIキーが設定されてぁE��せん');
             }
 
             const response = await fetch(`${GEMINI_API_ENDPOINT}?key=${apiKey}`, {
@@ -936,7 +936,7 @@
         async function callGeminiWithImage(prompt, imageBase64, mimeType) {
             const apiKey = getApiKey();
             if (!apiKey) {
-                throw new Error('APIキーが設定されていません');
+                throw new Error('APIキーが設定されてぁE��せん');
             }
 
             const response = await fetch(`${GEMINI_API_ENDPOINT}?key=${apiKey}`, {
@@ -990,48 +990,48 @@
 
         // --- Prompts ---
         const IMAGE_ANALYSIS_PROMPT = `
-この画像からレシピ情報を抽出してください。
-画像がレシピに関連しない場合は、画像に写っている料理を推測してレシピを生成してください。
+こ�E画像からレシピ情報を抽出してください、E
+画像がレシピに関連しなぁE��合�E、画像に写ってぁE��料理を推測してレシピを生�Eしてください、E
 
-以下のJSON形式で回答してください：
+以下�EJSON形式で回答してください�E�E
 {
-  "name": "料理名",
+  "name": "料理吁E,
   "ingredients": [
-    { "name": "材料名", "amount": "分量" }
+    { "name": "材料吁E, "amount": "刁E��" }
   ],
   "steps": [
-    { "description": "調理手順の説明", "duration": 秒数（オプション、調理時間がある場合のみ） }
+    { "description": "調琁E��頁E�E説昁E, "duration": 秒数�E�オプション、調琁E��間がある場合�Eみ�E�E}
   ]
 }
 
-注意事項：
+注意事頁E��E
 - 日本語で回答してください
 - 材料は全て含めてください
-- 調理時間（duration）は秒単位で、電子レンジや加熱時間がある工程にのみ含めてください
+- 調琁E��間！Euration�E��E秒単位で、E��子レンジめE��熱時間がある工程にのみ含めてください
 `;
 
         const URL_EXTRACTION_PROMPT = `
-以下のURLからレシピ情報を推測して生成してください。
-URLに含まれるキーワードや一般的なレシピサイトの構造を参考にしてください。
+以下�EURLからレシピ情報を推測して生�Eしてください、E
+URLに含まれるキーワードや一般皁E��レシピサイト�E構造を参老E��してください、E
 
 URL: {url}
 
-以下のJSON形式で回答してください：
+以下�EJSON形式で回答してください�E�E
 {
-  "name": "料理名",
+  "name": "料理吁E,
   "ingredients": [
-    { "name": "材料名", "amount": "分量" }
+    { "name": "材料吁E, "amount": "刁E��" }
   ],
   "steps": [
-    { "description": "調理手順の説明", "duration": 秒数（オプション、調理時間がある場合のみ） }
+    { "description": "調琁E��頁E�E説昁E, "duration": 秒数�E�オプション、調琁E��間がある場合�Eみ�E�E}
   ]
 }
 
-注意事項：
+注意事頁E��E
 - 日本語で回答してください
-- URLから料理名を推測し、一般的なレシピを生成してください
-- 材料は5〜10個程度含めてください
-- 調理時間（duration）は秒単位で、加熱時間がある工程にのみ含めてください
+- URLから料理名を推測し、一般皁E��レシピを生�Eしてください
+- 材料は5、E0個程度含めてください
+- 調琁E��間！Euration�E��E秒単位で、加熱時間がある工程にのみ含めてください
 `;
 
         // --- Router ---
@@ -1060,7 +1060,7 @@ URL: {url}
             }
             else if (hash === '#create') {
                 viewForm.classList.add('active');
-                headerTitle.textContent = '新規レシピ';
+                headerTitle.textContent = '新規レシチE;
                 backBtn.classList.remove('hidden');
                 backBtn.onclick = () => window.history.back();
                 settingsBtn.classList.add('hidden');
@@ -1074,7 +1074,7 @@ URL: {url}
                 const recipe = recipes.find(r => r.id === id);
                 if (recipe) {
                     viewForm.classList.add('active');
-                    headerTitle.textContent = 'レシピ編集';
+                    headerTitle.textContent = 'レシピ編雁E;
                     backBtn.classList.remove('hidden');
                     backBtn.onclick = () => window.history.back();
                     settingsBtn.classList.add('hidden');
@@ -1091,7 +1091,7 @@ URL: {url}
                 const data = getRecipeDataFromHash(hash);
                 if (data) {
                     const recipe = Array.isArray(data) ? data[0] : data;
-                    headerTitle.textContent = recipe.n || recipe.name || '共有レシピ';
+                    headerTitle.textContent = recipe.n || recipe.name || '共有レシチE;
                     renderDetail(recipe, true); // true = isShared
                 } else {
                     alert('レシピデータの読み込みに失敗しました');
@@ -1116,7 +1116,7 @@ URL: {url}
             }
             else if (hash === '#settings') {
                 viewSettings.classList.add('active');
-                headerTitle.textContent = '設定';
+                headerTitle.textContent = '設宁E;
                 backBtn.classList.remove('hidden');
                 backBtn.onclick = () => window.history.back();
                 settingsBtn.classList.add('hidden');
@@ -1215,10 +1215,10 @@ URL: {url}
                 emptyState.classList.remove('hidden');
                 if (query) {
                     emptyTitle.textContent = '見つかりませんでした';
-                    emptyDesc.textContent = `"${query}" に一致するレシピはありません`;
+                    emptyDesc.textContent = `"${query}" に一致するレシピ�Eありません`;
                 } else {
                     emptyTitle.textContent = 'レシピがありません';
-                    emptyDesc.innerHTML = '右下のボタンから新しいレシピを作成するか、<br>アプリから共有されたレシピを保存してください。';
+                    emptyDesc.innerHTML = '右下�Eボタンから新しいレシピを作�Eするか、Ebr>アプリから共有されたレシピを保存してください、E;
                 }
                 return;
             } else {
@@ -1232,14 +1232,14 @@ URL: {url}
 
                 // Calculate time
                 const totalSeconds = (recipe.steps || []).reduce((acc, s) => acc + (s.duration || 0), 0);
-                const timeText = totalSeconds > 0 ? `${Math.floor(totalSeconds / 60)}分` : '- 分';
+                const timeText = totalSeconds > 0 ? `${Math.floor(totalSeconds / 60)}刁E : '- 刁E;
 
                 el.innerHTML = `
                     <div style="font-size: 32px">🍳</div>
                     <div class="recipe-card-content">
                         <div class="recipe-card-title">${escapeHtml(recipe.name)}</div>
                         <div class="recipe-card-meta">
-                            ⏱ ${timeText} · 📝 材料 ${recipe.ingredients?.length || 0} · 🔨 工程 ${recipe.steps?.length || 0}
+                            ⏱ ${timeText} · 📝 材料 ${recipe.ingredients?.length || 0} · 🔨 工稁E${recipe.steps?.length || 0}
                         </div>
                     </div>
                     <button class="delete-btn" style="font-size:18px" onclick="event.stopPropagation(); deleteRecipe('${recipe.id}')">🗑</button>
@@ -1250,7 +1250,7 @@ URL: {url}
         }
 
         function deleteRecipe(id) {
-            if (!confirm('このレシピを削除しますか？')) return;
+            if (!confirm('こ�Eレシピを削除しますか�E�E)) return;
             const recipes = getStoredRecipes().filter(r => r.id !== id);
             saveStoredRecipes(recipes);
             renderList();
@@ -1285,7 +1285,7 @@ URL: {url}
                 if (duration > 0) {
                     const min = Math.floor(duration / 60);
                     const sec = duration % 60;
-                    const timeText = sec > 0 ? `${min}分${sec}秒` : `${min}分`;
+                    const timeText = sec > 0 ? `${min}刁E{sec}秒` : `${min}刁E;
                     timerHtml = `<button class="timer-btn">⏱ ${timeText}</button>`;
                 }
 
@@ -1304,7 +1304,7 @@ URL: {url}
             if (totalSeconds > 0) {
                 const tMin = Math.floor(totalSeconds / 60);
                 document.getElementById('cooking-time-section').classList.remove('hidden');
-                document.getElementById('total-time').textContent = `約${tMin}分`;
+                document.getElementById('total-time').textContent = `紁E{tMin}刁E;
             } else {
                 document.getElementById('cooking-time-section').classList.add('hidden');
             }
@@ -1323,7 +1323,7 @@ URL: {url}
                 saveBtn.onclick = () => {
                     const newRecipe = {
                         id: generateId(),
-                        name: recipe.n || recipe.name || '名称未設定',
+                        name: recipe.n || recipe.name || '名称未設宁E,
                         ingredients: ingredients.map(i => ({ name: i.n || i.name, amount: i.a || i.amount })),
                         steps: steps.map(s => ({ description: s.d || s.description, duration: s.t || s.duration || 0 })),
                         createdAt: new Date().toISOString()
@@ -1382,8 +1382,8 @@ URL: {url}
             const div = document.createElement('div');
             div.className = 'list-item';
             div.innerHTML = `
-                <input type="text" class="form-input" style="flex:2" placeholder="材料名 (例: 豚肉)" value="${escapeHtml(name)}">
-                <input type="text" class="form-input" style="flex:1" placeholder="分量" value="${escapeHtml(amount)}">
+                <input type="text" class="form-input" style="flex:2" placeholder="材料吁E(侁E 豚肉)" value="${escapeHtml(name)}">
+                <input type="text" class="form-input" style="flex:1" placeholder="刁E��" value="${escapeHtml(amount)}">
                 <button type="button" class="delete-btn" onclick="this.parentElement.remove()">🗑</button>
             `;
             container.appendChild(div);
@@ -1398,10 +1398,10 @@ URL: {url}
             div.style.alignItems = 'flex-start';
             div.innerHTML = `
                 <div style="flex:1; display:flex; flex-direction:column; gap:8px">
-                    <textarea class="form-input" rows="2" placeholder="工程の説明">${escapeHtml(desc)}</textarea>
+                    <textarea class="form-input" rows="2" placeholder="工程�E説昁E>${escapeHtml(desc)}</textarea>
                     <div style="display:flex; align-items:center; gap:8px; font-size:14px">
-                        ⏱ タイマー: <input type="number" class="form-input" style="width:80px" placeholder="分" min="0" value="${min || ''}"> 分
-                        <input type="number" class="form-input" style="width:80px" placeholder="秒" min="0" max="59" value="${sec || ''}"> 秒
+                        ⏱ タイマ�E: <input type="number" class="form-input" style="width:80px" placeholder="刁E min="0" value="${min || ''}"> 刁E
+                        <input type="number" class="form-input" style="width:80px" placeholder="私E min="0" max="59" value="${sec || ''}"> 私E
                     </div>
                 </div>
                 <button type="button" class="delete-btn" onclick="this.parentElement.remove()">🗑</button>
@@ -1412,7 +1412,7 @@ URL: {url}
         function saveRecipe() {
             const name = document.getElementById('form-name').value.trim();
             if (!name) {
-                alert('レシピ名を入力してください');
+                alert('レシピ名を�E力してください');
                 return;
             }
 
@@ -1443,7 +1443,7 @@ URL: {url}
             }).filter(s => s); // Filter empty descriptions
 
             if (steps.length === 0) {
-                if (!confirm('調理工程がありませんが保存しますか？')) return;
+                if (!confirm('調琁E��程がありませんが保存しますか�E�E)) return;
             }
 
             const stored = getStoredRecipes();
@@ -1487,7 +1487,7 @@ URL: {url}
                 const parsed = parseJsonFromResponse(response);
                 populateFormFromAI(parsed);
                 switchTab('manual');
-                alert('解析が完了しました！手入力タブで確認・編集してください。');
+                alert('解析が完亁E��ました�E�手入力タブで確認�E編雁E��てください、E);
             } catch (error) {
                 console.error('Image analysis error:', error);
                 alert('解析に失敗しました: ' + error.message);
@@ -1504,7 +1504,7 @@ URL: {url}
             try {
                 new URL(url);
             } catch {
-                alert('有効なURLを入力してください');
+                alert('有効なURLを�E力してください');
                 return;
             }
 
@@ -1515,7 +1515,7 @@ URL: {url}
                 const parsed = parseJsonFromResponse(response);
                 populateFormFromAI(parsed);
                 switchTab('manual');
-                alert('取り込みが完了しました！手入力タブで確認・編集してください。');
+                alert('取り込みが完亁E��ました�E�手入力タブで確認�E編雁E��てください、E);
             } catch (error) {
                 console.error('URL analysis error:', error);
                 alert('取り込みに失敗しました: ' + error.message);
@@ -1664,7 +1664,7 @@ URL: {url}
             document.getElementById('save-api-key-btn').onclick = () => {
                 const key = document.getElementById('api-key-input').value.trim();
                 if (!key) {
-                    alert('APIキーを入力してください');
+                    alert('APIキーを�E力してください');
                     return;
                 }
                 saveApiKey(key);
@@ -1673,7 +1673,7 @@ URL: {url}
             };
 
             document.getElementById('clear-api-key-btn').onclick = () => {
-                if (!confirm('APIキーをクリアしますか？')) return;
+                if (!confirm('APIキーをクリアしますか�E�E)) return;
                 clearApiKey();
                 document.getElementById('api-key-input').value = '';
                 document.getElementById('api-key-status').classList.add('hidden');
@@ -1788,12 +1788,12 @@ URL: {url}
                                 if (headerTitle) headerTitle.textContent = 'レシピ一覧';
                             } else if (hash === '#create') {
                                 if (viewForm) viewForm.classList.add('active');
-                                if (headerTitle) headerTitle.textContent = '新規レシピ';
+                                if (headerTitle) headerTitle.textContent = '新規レシチE;
                                 if (backBtn) backBtn.classList.remove('hidden');
                                 if (settingsBtn) settingsBtn.classList.add('hidden');
                             } else if (hash === '#settings') {
                                 if (viewSettings) viewSettings.classList.add('active');
-                                if (headerTitle) headerTitle.textContent = '設定';
+                                if (headerTitle) headerTitle.textContent = '設宁E;
                                 if (backBtn) backBtn.classList.remove('hidden');
                                 if (settingsBtn) settingsBtn.classList.add('hidden');
                             }
@@ -1808,6 +1808,27 @@ URL: {url}
                 }
             }, 100);
         })();
+    </script>
+    <!-- Early Global Handlers - Must be first -->
+    <script>
+        window.handleSaveApiKey = function() {
+            var key = document.getElementById('api-key-input').value.trim();
+            if (!key) { alert('API�L�[����͂��Ă�������'); return; }
+            localStorage.setItem('recipeTimer_geminiApiKey', key);
+            var statusEl = document.getElementById('api-key-status');
+            if (statusEl) statusEl.classList.remove('hidden');
+            alert('API�L�[��ۑ����܂���');
+        };
+        window.handleClearApiKey = function() {
+            if (!confirm('API�L�[���N���A���܂����H')) return;
+            localStorage.removeItem('recipeTimer_geminiApiKey');
+            var inputEl = document.getElementById('api-key-input');
+            var statusEl = document.getElementById('api-key-status');
+            if (inputEl) inputEl.value = '';
+            if (statusEl) statusEl.classList.add('hidden');
+            alert('API�L�[���N���A���܂���');
+        };
+        console.log('[Early] Global handlers defined');
     </script>
 </body>
 
